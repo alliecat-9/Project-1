@@ -1,0 +1,66 @@
+from typing import List
+
+# Condensing grading functionality in a class improves structure and organization
+class GradingSystem:
+    def __init__(self):
+        # Using instance variables for scores and best_score to adhere to OOP principles
+        self.scores: List[int] = []
+        self.best_score: int = 0
+
+    def get_scores(self, num_students: int) -> None:
+        # Moved input handling into a method to separate concerns and improve readability
+        while True:
+            try:
+                # Using list(map(int, ...)) for efficient input parsing
+                scores = list(map(int, input(f"Enter {num_students} score(s): ").split()))
+                if len(scores) != num_students:
+                    # Validates the number of scores entered matches the number of students
+                    raise ValueError(f"Please enter exactly {num_students} scores.")
+                self.scores = scores
+                # Storing the maximum score for efficiency, so it doesn't have to be recalculated
+                self.best_score = max(scores)
+                break
+            except ValueError as e:
+                # Handles invalid inputs and prompts the user to try again
+                print(e)
+
+    def determine_grade(self, score: int) -> str:
+        # Encapsulated grade determination logic into a method for reusability
+        if score >= self.best_score - 10:
+            return 'A'
+        elif score >= self.best_score - 20:
+            return 'B'
+        elif score >= self.best_score - 30:
+            return 'C'
+        elif score >= self.best_score - 40:
+            return 'D'
+        else:
+            return 'F'
+
+    def display_results(self) -> None:
+        # Encapsulated output logic to simplify the main function
+        for student_num, score in enumerate(self.scores, start=1):
+            grade = self.determine_grade(score)
+            print(f"Student {student_num} score is {score} and grade is {grade}")
+
+
+def main():
+    try:
+        # Wrapped the number of students input in a try-except block for robust error handling
+        num_students = int(input("Total number of students: "))
+        if num_students < 1:
+            # Ensures a valid number of students is entered
+            raise ValueError("Number of students must be at least 1.")
+
+        # Using the GradingSystem class to encapsulate functionality
+        grading_system = GradingSystem()
+        grading_system.get_scores(num_students)
+        grading_system.display_results()
+    except ValueError as e:
+        # Handles any errors that occur during user input
+        print(e)
+
+
+# Added a main guard to allow safe importing of the module
+if __name__ == "__main__":
+    main()
