@@ -1,31 +1,35 @@
 from typing import List
 
-# Condensing grading functionality in a class improves structure and organization
+# Here I condensed grading logic into a GradingSystem class to improve the structure of the code,
+# unlike before where everything was in the main function, making it harder to manage and scale.
 class GradingSystem:
     def __init__(self):
-        # Using instance variables for scores and best_score to adhere to OOP principles
+        # I added instance variables to store scores and the best score,
+        # so that these values are encapsulated within the class, unlike before where they were loose variables.
         self.scores: List[int] = []
         self.best_score: int = 0
 
     def get_scores(self, num_students: int) -> None:
-        # Moved input handling into a method to separate concerns and improve readability
+        # Here I moved the input handling into this method to separate responsibilities,
+        # making the code more modular and readable compared to before.
         while True:
             try:
-                # Using list(map(int, ...)) for efficient input parsing
+                # Now using map and list together for parsing input efficiently, which is cleaner than previous approaches.
                 scores = list(map(int, input(f"Enter {num_students} score(s): ").split()))
                 if len(scores) != num_students:
-                    # Validates the number of scores entered matches the number of students
+                    # This validation ensures the user enters exactly the number of scores needed,
+                    # improving user experience and preventing errors unlike before where this was not enforced.
                     raise ValueError(f"Please enter exactly {num_students} scores.")
                 self.scores = scores
-                # Storing the maximum score for efficiency, so it doesn't have to be recalculated
+                # Calculating the best score once here instead of recalculating multiple times like in the previous version.
                 self.best_score = max(scores)
                 break
             except ValueError as e:
-                # Handles invalid inputs and prompts the user to try again
+                # Adding clear error messages to guide the user better when invalid input is provided.
                 print(e)
 
     def determine_grade(self, score: int) -> str:
-        # Encapsulated grade determination logic into a method for reusability
+        # I condensed the grading logic into this method for better reusability and separation of concerns.
         if score >= self.best_score - 10:
             return 'A'
         elif score >= self.best_score - 20:
@@ -38,7 +42,7 @@ class GradingSystem:
             return 'F'
 
     def display_results(self) -> None:
-        # Encapsulated output logic to simplify the main function
+        # Encapsulated the output logic into this method to make the main function simpler and more focused.
         for student_num, score in enumerate(self.scores, start=1):
             grade = self.determine_grade(score)
             print(f"Student {student_num} score is {score} and grade is {grade}")
@@ -46,21 +50,19 @@ class GradingSystem:
 
 def main():
     try:
-        # Wrapped the number of students input in a try-except block for robust error handling
+        # Wrapping the input for the number of students in a try-except block to handle invalid entries gracefully.
         num_students = int(input("Total number of students: "))
         if num_students < 1:
-            # Ensures a valid number of students is entered
+            # Adding this validation ensures the program handles edge cases, like entering a non-positive number.
             raise ValueError("Number of students must be at least 1.")
 
-        # Using the GradingSystem class to encapsulate functionality
+        # Using the GradingSystem class here to handle the logic instead of doing everything in main like before.
         grading_system = GradingSystem()
         grading_system.get_scores(num_students)
         grading_system.display_results()
     except ValueError as e:
-        # Handles any errors that occur during user input
+        # This ensures that the user is informed about invalid input, improving user experience.
         print(e)
 
-
-# Added a main guard to allow safe importing of the module
 if __name__ == "__main__":
     main()
